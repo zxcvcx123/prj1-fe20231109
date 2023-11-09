@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 export function BoardList() {
   const [boardList, setBoardList] = useState([]);
   const navigate = useNavigate();
-
+  // 통신
   useEffect(() => {
     axios
       .get("/api/board/list")
