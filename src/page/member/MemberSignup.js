@@ -15,12 +15,14 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export function MemberSignup() {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
   const [email, setEmail] = useState("");
+  const navigate = useNavigate();
 
   // 유효성 검사
   const [idAvailable, setIdAvailable] = useState(false);
@@ -50,8 +52,29 @@ export function MemberSignup() {
   function handleSubmit() {
     axios
       .post("/api/member/signup", { id, password, email })
-      .then(() => console.log("잘됨"))
-      .catch(() => console.log("안됨"))
+      .then(() => {
+        toast({
+          position: "top",
+          description: "회원가입이 완료되었습니다.",
+          status: "success",
+        });
+        navigate("/");
+      })
+      .catch((e) => {
+        if (e.response.status === 400) {
+          toast({
+            position: "top",
+            description: "입력 값을 확인해주세요.",
+            status: "warning",
+          });
+        } else {
+          toast({
+            position: "top",
+            description: "가입 중 오류 발생!!!",
+            status: "error",
+          });
+        }
+      })
       .finally(() => console.log("끝남"));
   }
 
