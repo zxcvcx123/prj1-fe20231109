@@ -21,10 +21,18 @@ export function MemberSignup() {
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
   const [email, setEmail] = useState("");
+
+  // 유효성 검사
   const [idAvailable, setIdAvailable] = useState(false);
+  const [emailAvailable, setEmailAvailable] = useState(false);
+
   const toast = useToast();
 
   let submitAvailable = true;
+
+  if (!emailAvailable) {
+    submitAvailable = false;
+  }
 
   if (!idAvailable) {
     submitAvailable = false;
@@ -59,7 +67,7 @@ export function MemberSignup() {
         toast({
           position: "top",
           description: "중복된 ID입니다.",
-          status: "error",
+          status: "warning",
         });
       })
       .catch((e) => {
@@ -73,6 +81,33 @@ export function MemberSignup() {
         }
       })
       .finally(() => console.log("끝"));
+  }
+
+  // 이메일 체크
+  function handleEmailCheck() {
+    const params = new URLSearchParams();
+    params.set("email", email);
+
+    axios
+      .get("/api/member/check?" + params.toString())
+      .then(() => {
+        setEmailAvailable(false);
+        toast({
+          position: "top",
+          description: "이미 사용 중인 email 입니다.",
+          status: "warning",
+        });
+      })
+      .catch((e) => {
+        if (e.response.status === 404) {
+          setEmailAvailable(true);
+          toast({
+            position: "top",
+            description: "사용 가능한 email 입니다.",
+            status: "success",
+          });
+        }
+      });
   }
 
   return (
@@ -111,14 +146,22 @@ export function MemberSignup() {
         />
         <FormErrorMessage>암호가 다릅니다!!!</FormErrorMessage>
       </FormControl>
-      <FormControl>
+      <FormControl isInvalid={!emailAvailable}>
         <FormLabel>email</FormLabel>
-        <Input
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          type="email"
-        />
+        <Flex>
+          <Input
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              setEmailAvailable(false);
+            }}
+            type="email"
+          />
+          <Button onClick={handleEmailCheck}>중복확인</Button>
+        </Flex>
+        <FormErrorMessage>email 중복 체크를 해주세요.</FormErrorMessage>
       </FormControl>
+
       <Button
         isDisabled={!submitAvailable}
         onClick={handleSubmit}
