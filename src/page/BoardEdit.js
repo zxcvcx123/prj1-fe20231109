@@ -4,7 +4,15 @@ import {
   FormControl,
   FormLabel,
   Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Spinner,
+  Text,
   Textarea,
   useDisclosure,
   useToast,
@@ -87,10 +95,33 @@ export function BoardEdit() {
           }
         />
       </FormControl>
-      <Button colorScheme="blue" onClick={handleSubmit}>
+      <Button colorScheme="blue" onClick={onOpen}>
         저장
       </Button>
       <Button onClick={() => navigate(-1)}>취소</Button>
+      <>
+        <>
+          <Modal isOpen={isOpen} onClose={onClose}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>수정하기</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <Text>수정하시겠습니까?</Text>
+              </ModalBody>
+
+              <ModalFooter>
+                <Button colorScheme="blue" onClick={handleSubmit}>
+                  수정
+                </Button>
+                <Button colorScheme="red" onClick={onClose}>
+                  취소
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+        </>
+      </>
     </Box>
   );
 }
