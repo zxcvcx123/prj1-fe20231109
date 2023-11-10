@@ -63,7 +63,7 @@ export function BoardEdit() {
           });
         }
       })
-      .finally(() => console.log("끝"));
+      .finally(() => onClose());
   }
 
   return (
@@ -108,6 +108,7 @@ export function BoardEdit() {
       <Button onClick={() => navigate(-1)}>취소</Button>
       <>
         <>
+          {/* 수정 모달 */}
           <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
