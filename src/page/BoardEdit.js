@@ -45,16 +45,23 @@ export function BoardEdit() {
       .put("/api/board/edit", board)
       .then((res) => {
         toast({
-          description: "수정 완료",
+          description: "수정 완료!",
           status: "success",
         });
         navigate(-1);
       })
       .catch((e) => {
-        toast({
-          description: "수정에 실패 했습니다",
-          status: "error",
-        });
+        if (e.response.status === 400) {
+          toast({
+            description: "수정 실패!!! 수정할 게시글을 확인해주세요.",
+            status: "error",
+          });
+        } else {
+          toast({
+            description: "수정 실패!!! 관리자에게 문의하세요",
+            status: "error",
+          });
+        }
       })
       .finally(() => console.log("끝"));
   }
