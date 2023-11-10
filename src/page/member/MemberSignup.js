@@ -30,6 +30,8 @@ export function MemberSignup() {
   if (password.length === 0) {
     submitAvailable = false;
   }
+
+  // 가입하기
   function handleSubmit() {
     axios
       .post("/api/member/signup", { id, password, email })
@@ -42,7 +44,7 @@ export function MemberSignup() {
   function handleIdCheck() {
     const searchParam = new URLSearchParams();
     searchParam.set("id", id);
-    console.log(searchParam.toString());
+
     axios
       .get("/api/member/check?" + searchParam.toString())
       .then(() => {
