@@ -31,6 +31,7 @@ export function MemberList() {
             <Th>아이디</Th>
             <Th>비밀번호</Th>
             <Th>이메일</Th>
+            <Th>가입일자</Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -39,6 +40,7 @@ export function MemberList() {
               <Td>{member.id}</Td>
               <Td>{member.password}</Td>
               <Td>{member.email}</Td>
+              <Td>{member.inserted}</Td>
             </Tr>
           ))}
         </Tbody>
