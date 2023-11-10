@@ -93,7 +93,7 @@ export function MemberSignup() {
         </Flex>
         <FormErrorMessage>ID 중복체크를 해주세요.</FormErrorMessage>
       </FormControl>
-      <FormControl isInvalid={password.length === 0}>
+      <FormControl>
         <FormLabel>password</FormLabel>
         <Input
           value={password}
