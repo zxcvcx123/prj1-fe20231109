@@ -6,6 +6,8 @@ import {
   Input,
   Spinner,
   Textarea,
+  useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useImmer } from "use-immer";
@@ -17,6 +19,8 @@ export function BoardEdit() {
   const navigate = useNavigate();
   // /edit/:id id 쪽에 들어가는 값을 id이름으로 받을 수 있음
   const { id } = useParams();
+  const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     axios.get("/api/board/id/" + id).then((res) => updateBoard(res.data));
@@ -31,8 +35,19 @@ export function BoardEdit() {
     // PUT /api/board/edit
     axios
       .put("/api/board/edit", board)
-      .then((res) => console.log("잘 수정 됨"))
-      .catch((e) => console.log("잘 안됨"))
+      .then((res) => {
+        toast({
+          description: "수정 완료",
+          status: "success",
+        });
+        navigate(-1);
+      })
+      .catch((e) => {
+        toast({
+          description: "수정에 실패 했습니다",
+          status: "error",
+        });
+      })
       .finally(() => console.log("끝"));
   }
 
