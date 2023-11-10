@@ -54,7 +54,6 @@ export function MemberSignup() {
       .post("/api/member/signup", { id, password, email })
       .then(() => {
         toast({
-          position: "top",
           description: "회원가입이 완료되었습니다.",
           status: "success",
         });
@@ -63,7 +62,6 @@ export function MemberSignup() {
       .catch((e) => {
         if (e.response.status === 400) {
           toast({
-            position: "top",
             description: "입력 값을 확인해주세요.",
             status: "warning",
           });
