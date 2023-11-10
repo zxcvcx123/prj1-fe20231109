@@ -1,4 +1,8 @@
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
   Box,
   Button,
   Flex,
@@ -6,6 +10,8 @@ import {
   FormErrorMessage,
   FormLabel,
   Input,
+  position,
+  useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import axios from "axios";
@@ -16,6 +22,7 @@ export function MemberSignup() {
   const [passwordCheck, setPasswordCheck] = useState("");
   const [email, setEmail] = useState("");
   const [idAvailable, setIdAvailable] = useState(false);
+  const toast = useToast();
 
   let submitAvailable = true;
 
@@ -49,10 +56,20 @@ export function MemberSignup() {
       .get("/api/member/check?" + searchParam.toString())
       .then(() => {
         setIdAvailable(false);
+        toast({
+          position: "top",
+          description: "중복된 ID입니다.",
+          status: "error",
+        });
       })
       .catch((e) => {
         if (e.response.status === 404) {
           setIdAvailable(true);
+          toast({
+            position: "top",
+            description: "사용가능한 ID입니다.",
+            status: "success",
+          });
         }
       })
       .finally(() => console.log("끝"));
