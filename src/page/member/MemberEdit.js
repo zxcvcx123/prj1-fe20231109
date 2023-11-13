@@ -1,4 +1,4 @@
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
@@ -27,6 +27,7 @@ export function MemberEdit() {
   const [passwordCheck, setPasswordCheck] = useState("");
   const [email, setEmail] = useState("");
   const [emailAvailable, setEmailAvailable] = useState(false);
+  const navigate = useNavigate();
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -94,7 +95,29 @@ export function MemberEdit() {
 
   // 수정하기 동작 버튼
   function handleSubmit() {
-    axios.put("/api/member/edit", { id, password, email });
+    axios
+      .put("/api/member/edit", { id, password, email })
+      .then(() => {
+        toast({
+          description: "수정이 완료 되었습니다.",
+          status: "success",
+        });
+        navigate("/member?id=" + id);
+      })
+      .catch((e) => {
+        if (e.response.status === 401 || e.response.status === 403) {
+          toast({
+            description: "권한이 없습니다.",
+            status: "error",
+          });
+        } else {
+          toast({
+            description: "수정중에 문제가 발생하였습니다.",
+            status: "success",
+          });
+        }
+      })
+      .finally(() => onClose);
   }
 
   return (
