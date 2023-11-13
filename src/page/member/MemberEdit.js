@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
   Box,
@@ -8,7 +8,15 @@ import {
   FormControl,
   FormLabel,
   Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Spinner,
+  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 
@@ -20,6 +28,7 @@ export function MemberEdit() {
   const [email, setEmail] = useState("");
   const [emailAvailable, setEmailAvailable] = useState(false);
   const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     axios.get("/api/member?" + params.toString()).then((res) => {
@@ -42,7 +51,7 @@ export function MemberEdit() {
     passwordChecked = true;
   }
 
-  if (password.trim()) {
+  if (password.length === 0) {
     passwordChecked = true;
   }
 
@@ -130,12 +139,27 @@ export function MemberEdit() {
         </Flex>
       </FormControl>
       <Button
-        onClick={handleSubmit}
+        onClick={onOpen}
         isDisabled={!emailChecked || !passwordChecked}
         colorScheme="purple"
       >
         수정
       </Button>
+      {/*  수정 모달 */}
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>수정</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>수정 하시겠습니까?</ModalBody>
+          <ModalFooter>
+            <Button onClick={onClose}>닫기</Button>
+            <Button onClick={handleSubmit} colorScheme="purple">
+              수정하기
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 }
