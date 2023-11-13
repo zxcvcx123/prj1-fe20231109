@@ -6,6 +6,7 @@ import {
   Button,
   Flex,
   FormControl,
+  FormHelperText,
   FormLabel,
   Input,
   Modal,
@@ -106,10 +107,7 @@ export function MemberEdit() {
         }
       });
   }
-  console.log("passwordChecked: " + passwordChecked);
-  console.log("emailChecked:" + emailChecked);
-  console.log("nicknameChecked: " + nicknameChecked);
-  console.log(password, passwordCheck);
+
   // 닉네임 중복확인
   function handleNickNameCheck() {
     const params = new URLSearchParams();
@@ -173,6 +171,9 @@ export function MemberEdit() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
+        <FormHelperText textColor={"red"}>
+          미입력시 기존 패스워드를 유지합니다.
+        </FormHelperText>
       </FormControl>
 
       {password.length > 0 && (
