@@ -15,6 +15,8 @@ import {
 export function MemberEdit() {
   const [params] = useSearchParams();
   const [member, setMember] = useState(null);
+  const [password, setPassword] = useState("");
+  const [passwordCheck, setPasswordCheck] = useState("");
   const [email, setEmail] = useState("");
   const [emailAvailable, setEmailAvailable] = useState(false);
   const toast = useToast();
@@ -30,6 +32,18 @@ export function MemberEdit() {
 
   if (member === null) {
     return <Spinner />;
+  }
+
+  // 암호가 없으면 기존 암호
+  // 암호 작성하면 새 암호, 암호 확인도 체크
+  let passwordChecked = false;
+
+  if (passwordChecked === password) {
+    passwordChecked = true;
+  }
+
+  if (password.trim()) {
+    passwordChecked = true;
   }
 
   // 기존 이메일과 같은지?
@@ -69,13 +83,33 @@ export function MemberEdit() {
       });
   }
 
+  // 수정하기 동작 버튼
+  function handleSubmit() {
+    axios.put("/api/member/edit", { id, password, email });
+  }
+
   return (
     <Box>
       <h1>{id}님 정보 수정</h1>
       <FormControl>
         <FormLabel>password</FormLabel>
-        <Input type="text" />
+        <Input
+          type="text"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
       </FormControl>
+
+      {password.length > 0 && (
+        <FormControl>
+          <FormLabel>password 확인</FormLabel>
+          <Input
+            type="text"
+            value={passwordCheck}
+            onChange={(e) => setPasswordCheck(e.target.value)}
+          />
+        </FormControl>
+      )}
 
       {/* 이메일을 변경하면 중복확인 다시 하도록 */}
       {/* 기존 email과 같으면 중복확인 안해도됨 */}
@@ -95,6 +129,13 @@ export function MemberEdit() {
           </Button>
         </Flex>
       </FormControl>
+      <Button
+        onClick={handleSubmit}
+        isDisabled={!emailChecked || !passwordChecked}
+        colorScheme="purple"
+      >
+        수정
+      </Button>
     </Box>
   );
 }
