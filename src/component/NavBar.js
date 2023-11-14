@@ -10,6 +10,7 @@ export function NavBar() {
       <Button onClick={() => navigate("/write")}>글 쓰기</Button>
       <Button onClick={() => navigate("/signup")}>가입하기</Button>
       <Button onClick={() => navigate("/member/list")}>회원목록</Button>
+      <Button onClick={() => navigate("/login")}>로그인</Button>
     </Flex>
   );
 }
