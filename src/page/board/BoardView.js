@@ -70,8 +70,8 @@ export function BoardView() {
         <Textarea value={board.content} readOnly />
       </FormControl>
       <FormControl>
-        <FormLabel>작성자</FormLabel>
-        <Input value={board.writer} readOnly />
+        <FormLabel>별명</FormLabel>
+        <Input value={board.nickname} readOnly />
       </FormControl>
       <FormControl>
         <FormLabel>작성일시</FormLabel>

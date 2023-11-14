@@ -32,7 +32,13 @@ export function MemberView() {
     axios
       .get("/api/member?" + params.toString())
       .then((res) => setMember(res.data))
-      .catch((e) => console.log(e));
+      .catch((e) => {
+        navigate("/login");
+        toast({
+          description: "권한이 없습니다.",
+          status: "warning",
+        });
+      });
   }, []);
 
   if (member === null) {
