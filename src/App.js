@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from "react";
+import React from "react";
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -15,7 +15,7 @@ import { MemberList } from "./page/member/MemberList";
 import { MemberView } from "./page/member/MemberView";
 import { MemberEdit } from "./page/member/MemberEdit";
 import { MemberLogin } from "./page/member/MemberLogin";
-import axios from "axios";
+import LoginProvider from "./component/LoginProvider";
 
 const routes = createBrowserRouter(
   createRoutesFromElements(
@@ -33,49 +33,11 @@ const routes = createBrowserRouter(
   ),
 );
 
-export const LoginContext = createContext(null);
-
 function App(props) {
-  const [login, setLogin] = useState("");
-
-  console.log(login);
-  function fetchLogin() {
-    axios.get("/api/member/login").then((res) => setLogin(res.data));
-  }
-
-  function isAuthenticated() {
-    return login !== "";
-  }
-
-  function isAdmin() {
-    if (login.auth) {
-      return login.auth.some((elem) => elem.name === "admin");
-    }
-    return false;
-  }
-
-  // function isManager(){
-  //   return login.auth.some((elem) => elem.name === "manager");
-  // }
-  //
-  // function hasAuth(auth){
-  //   return login.auth.some((elem) => elem.name === auth);
-  // }
-
-  function hasAccess(userId) {
-    return login.id === userId;
-  }
-
-  useEffect(() => {
-    fetchLogin();
-  }, []);
-
   return (
-    <LoginContext.Provider
-      value={{ login, fetchLogin, isAuthenticated, hasAccess, isAdmin }}
-    >
+    <LoginProvider>
       <RouterProvider router={routes} />;
-    </LoginContext.Provider>
+    </LoginProvider>
   );
 }
 
