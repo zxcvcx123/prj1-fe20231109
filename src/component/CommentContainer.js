@@ -6,7 +6,6 @@ import {
   CardHeader,
   Flex,
   Heading,
-  Input,
   Spinner,
   Stack,
   StackDivider,
@@ -64,6 +63,7 @@ function CommentList({ commentList }) {
     </Card>
   );
 }
+
 export function CommentContainer({ boardId }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [commentList, setCommentList] = useState([]);
