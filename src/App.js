@@ -36,7 +36,7 @@ const routes = createBrowserRouter(
 function App(props) {
   return (
     <LoginProvider>
-      <RouterProvider router={routes} />;
+      <RouterProvider router={routes} />
     </LoginProvider>
   );
 }
