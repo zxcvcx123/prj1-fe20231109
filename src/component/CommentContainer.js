@@ -16,72 +16,81 @@ import {
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-export function CommentContainer({ boardId }) {
-  // 댓글 작성
-  function CommentForm({ boardId }) {
-    const [comment, setComment] = useState("");
-    function handleSubmit() {
-      axios.post("/api/comment/add", {
-        boardId,
-        comment,
-      });
-    }
+// 댓글 작성
+function CommentForm({ boardId, isSubmitting, onSubmit }) {
+  const [comment, setComment] = useState("");
 
-    return (
-      <Box>
-        <Textarea
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
-        />
-        <Button onClick={handleSubmit}>쓰기</Button>
-      </Box>
-    );
-  }
-
-  // 댓글 목록
-  function CommentList({ boardId }) {
-    const [commentList, setCommentList] = useState([]);
-
-    useEffect(() => {
-      const params = new URLSearchParams();
-      params.set("boardId", boardId);
-      axios
-        .get("/api/comment/list?" + params)
-        .then((res) => setCommentList(res.data));
-    }, [commentList]);
-
-    if (commentList == null) {
-      return <Spinner />;
-    }
-
-    return (
-      <Card>
-        <CardHeader>
-          <Heading size={"md"}>댓글 리스트</Heading>
-        </CardHeader>
-        <CardBody>
-          <Stack divider={<StackDivider />} spacing={"4"}>
-            {commentList &&
-              commentList.map((comment) => (
-                <Box key={comment.id}>
-                  <Flex justifyContent={"space-between"}>
-                    <Heading size={"xs"}>{comment.memberId}</Heading>
-                    <Text fontSize={"xs"}>{comment.inserted}</Text>
-                  </Flex>
-                  <Text pt={"2"} fontSize={"sm"}>
-                    {comment.comment}
-                  </Text>
-                </Box>
-              ))}
-          </Stack>
-        </CardBody>
-      </Card>
-    );
+  function handleSubmit() {
+    onSubmit({ boardId, comment });
   }
 
   return (
     <Box>
-      <CommentForm boardId={boardId} />
+      <Textarea value={comment} onChange={(e) => setComment(e.target.value)} />
+      <Button isDisable={isSubmitting} onClick={handleSubmit}>
+        쓰기
+      </Button>
+    </Box>
+  );
+}
+
+// 댓글 목록
+function CommentList({ boardId }) {
+  const [commentList, setCommentList] = useState([]);
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+    params.set("boardId", boardId);
+    axios
+      .get("/api/comment/list?" + params)
+      .then((res) => setCommentList(res.data));
+  }, []);
+
+  if (commentList == null) {
+    return <Spinner />;
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <Heading size={"md"}>댓글 리스트</Heading>
+      </CardHeader>
+      <CardBody>
+        <Stack divider={<StackDivider />} spacing={"4"}>
+          {commentList &&
+            commentList.map((comment) => (
+              <Box key={comment.id}>
+                <Flex justifyContent={"space-between"}>
+                  <Heading size={"xs"}>{comment.memberId}</Heading>
+                  <Text fontSize={"xs"}>{comment.inserted}</Text>
+                </Flex>
+                <Text pt={"2"} fontSize={"sm"} sx={{ whiteSpace: "pre-wrap" }}>
+                  {comment.comment}
+                </Text>
+              </Box>
+            ))}
+        </Stack>
+      </CardBody>
+    </Card>
+  );
+}
+export function CommentContainer({ boardId }) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  function handleSubmit(comment) {
+    setIsSubmitting(true);
+    axios
+      .post("/api/comment/add", comment)
+      .finally(() => setIsSubmitting(false));
+  }
+
+  return (
+    <Box>
+      <CommentForm
+        boardId={boardId}
+        isSubmitting={isSubmitting}
+        onSubmit={handleSubmit}
+      />
       <CommentList boardId={boardId} />
     </Box>
   );
