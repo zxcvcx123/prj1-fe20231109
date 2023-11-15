@@ -19,10 +19,12 @@ import {
   Text,
   Textarea,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { DeleteIcon } from "@chakra-ui/icons";
+import { LoginContext } from "./LoginProvider";
 
 // 댓글 작성
 function CommentForm({ boardId, isSubmitting, onSubmit }) {
@@ -44,6 +46,8 @@ function CommentForm({ boardId, isSubmitting, onSubmit }) {
 
 // 댓글 목록
 function CommentList({ commentList, onDeleteModalOpen, isSubmitting }) {
+  const { hasAccess } = useContext(LoginContext);
+
   if (commentList == null) {
     return <Spinner />;
   }
@@ -70,14 +74,16 @@ function CommentList({ commentList, onDeleteModalOpen, isSubmitting }) {
                   >
                     {comment.comment}
                   </Text>
-                  <Button
-                    isDisabled={isSubmitting}
-                    colorScheme="red"
-                    size={"xs"}
-                    onClick={() => onDeleteModalOpen(comment.id)}
-                  >
-                    <DeleteIcon />
-                  </Button>
+                  {hasAccess(comment.memberId) && (
+                    <Button
+                      isDisabled={isSubmitting}
+                      colorScheme="red"
+                      size={"xs"}
+                      onClick={() => onDeleteModalOpen(comment.id)}
+                    >
+                      <DeleteIcon />
+                    </Button>
+                  )}
                 </Flex>
               </Box>
             ))}
@@ -91,7 +97,11 @@ export function CommentContainer({ boardId }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [commentList, setCommentList] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [id, setId] = useState(0);
+  const { isAuthenticated } = useContext(LoginContext);
+  const toast = useToast();
+  // const [id, setId] = useState(0);
+  // useRef : 컴포넌트에서 임시로 값을 저장하는 용도로 사용 (render X)
+  const commentIdRef = useRef(0);
 
   useEffect(() => {
     if (!isSubmitting) {
@@ -108,19 +118,46 @@ export function CommentContainer({ boardId }) {
     setIsSubmitting(true);
     axios
       .post("/api/comment/add", comment)
+      .then(() => {
+        toast({
+          description: "댓글이 등록 되었습니다.",
+          status: "success",
+        });
+      })
+      .catch((e) => {
+        toast({
+          description: "댓글 등록 중 문제가 발생하였습니다.",
+          status: "warning",
+        });
+      })
       .finally(() => setIsSubmitting(false));
   }
 
   // 댓글 삭제
   function handleDelete() {
     // TODO: then, catch
-    console.log(id + "번 댓글삭제");
-
     setIsSubmitting(true);
     axios
-      .delete("/api/comment/" + id)
-      .then()
-      .catch()
+      .delete("/api/comment/" + commentIdRef.current)
+      .then(() => {
+        toast({
+          description: "댓글이 삭제 됐습니다.",
+          status: "success",
+        });
+      })
+      .catch((e) => {
+        if (e.response.status === 401 || e.response.status === 403) {
+          toast({
+            description: "권한이 없습니다.",
+            status: "warning",
+          });
+        } else {
+          toast({
+            description: "댓글 삭제 중 문제가 발생했습니다.",
+            status: "error",
+          });
+        }
+      })
       .finally(() => {
         setIsSubmitting(false);
         onClose();
@@ -128,19 +165,26 @@ export function CommentContainer({ boardId }) {
   }
 
   function handleDeleteModalOpen(id) {
-    // id를 어딘가 저장
-    setId(id);
+    // id를 어딘가 저장 (기존 useState => useRef)
+    commentIdRef.current = id;
     // 모달 열기
     onOpen();
   }
 
   return (
     <Box>
-      <CommentForm
-        boardId={boardId}
-        isSubmitting={isSubmitting}
-        onSubmit={handleSubmit}
-      />
+      {isAuthenticated() && (
+        <>
+          <Box mt={"3%"}>
+            <p>댓글 작성</p>
+          </Box>
+          <CommentForm
+            boardId={boardId}
+            isSubmitting={isSubmitting}
+            onSubmit={handleSubmit}
+          />
+        </>
+      )}
       <CommentList
         boardId={boardId}
         isSubmitting={isSubmitting}
