@@ -35,17 +35,7 @@ function CommentForm({ boardId, isSubmitting, onSubmit }) {
 }
 
 // 댓글 목록
-function CommentList({ boardId }) {
-  const [commentList, setCommentList] = useState([]);
-
-  useEffect(() => {
-    const params = new URLSearchParams();
-    params.set("boardId", boardId);
-    axios
-      .get("/api/comment/list?" + params)
-      .then((res) => setCommentList(res.data));
-  }, []);
-
+function CommentList({ commentList }) {
   if (commentList == null) {
     return <Spinner />;
   }
@@ -76,6 +66,17 @@ function CommentList({ boardId }) {
 }
 export function CommentContainer({ boardId }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [commentList, setCommentList] = useState([]);
+
+  useEffect(() => {
+    if (!isSubmitting) {
+      const params = new URLSearchParams();
+      params.set("boardId", boardId);
+      axios
+        .get("/api/comment/list?" + params)
+        .then((res) => setCommentList(res.data));
+    }
+  }, [isSubmitting]);
 
   function handleSubmit(comment) {
     setIsSubmitting(true);
@@ -91,7 +92,7 @@ export function CommentContainer({ boardId }) {
         isSubmitting={isSubmitting}
         onSubmit={handleSubmit}
       />
-      <CommentList boardId={boardId} />
+      <CommentList commentList={commentList} />
     </Box>
   );
 }
