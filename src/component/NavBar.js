@@ -1,7 +1,7 @@
 import { Button, Flex, useToast } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { LoginContext } from "../component/LoginProvider";
 
 export function NavBar() {
@@ -11,6 +11,12 @@ export function NavBar() {
   const navigate = useNavigate();
 
   const urlParams = new URLSearchParams();
+
+  const location = useLocation();
+
+  useEffect(() => {
+    fetchLogin();
+  }, [location]);
 
   if (login !== "") {
     urlParams.set("id", login.id);
@@ -26,8 +32,7 @@ export function NavBar() {
           status: "info",
         });
         navigate("/");
-      })
-      .finally(() => fetchLogin());
+      });
   }
 
   return (
