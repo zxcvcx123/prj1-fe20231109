@@ -14,6 +14,8 @@ export function NavBar() {
 
   const location = useLocation();
 
+  console.log("location: " + location);
+
   useEffect(() => {
     fetchLogin();
   }, [location]);
