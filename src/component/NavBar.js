@@ -3,15 +3,23 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useContext, useEffect } from "react";
 import { LoginContext } from "../component/LoginProvider";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEnvelope } from "@fortawesome/free-regular-svg-icons";
+import {
+  faCircleUser,
+  faHouse,
+  faList,
+  faRightFromBracket,
+  faUpRightFromSquare,
+  faUserPlus,
+} from "@fortawesome/free-solid-svg-icons";
 
 export function NavBar() {
   const { fetchLogin, login, isAuthenticated, isAdmin } =
     useContext(LoginContext);
   const toast = useToast();
   const navigate = useNavigate();
-
   const urlParams = new URLSearchParams();
-
   const location = useLocation();
 
   useEffect(() => {
@@ -37,26 +45,44 @@ export function NavBar() {
 
   return (
     <Flex>
-      <Button onClick={() => navigate("/")}>메인</Button>
+      <Button onClick={() => navigate("/")}>
+        <FontAwesomeIcon icon={faHouse} />
+        메인
+      </Button>
       {isAuthenticated() && (
         <Button onClick={() => navigate("/write")}>글 쓰기</Button>
       )}
       {isAuthenticated() || (
-        <Button onClick={() => navigate("/signup")}>가입하기</Button>
+        <Button onClick={() => navigate("/signup")}>
+          <FontAwesomeIcon icon={faUserPlus} />
+          가입하기
+        </Button>
       )}
       {isAdmin() && (
-        <Button onClick={() => navigate("/member/list")}>회원목록</Button>
+        <Button onClick={() => navigate("/member/list")}>
+          <FontAwesomeIcon icon={faList} />
+          회원목록
+        </Button>
       )}
       {isAuthenticated() && (
         <Button onClick={() => navigate("/member?" + urlParams.toString())}>
+          <FontAwesomeIcon icon={faCircleUser} />
           회원 정보
         </Button>
       )}
       {isAuthenticated() || (
-        <Button onClick={() => navigate("/login")}>로그인</Button>
+        <Button onClick={() => navigate("/login")}>
+          <FontAwesomeIcon icon={faUpRightFromSquare} />
+          로그인
+        </Button>
       )}
 
-      {isAuthenticated() && <Button onClick={handleLogout}>로그아웃</Button>}
+      {isAuthenticated() && (
+        <Button onClick={handleLogout}>
+          <FontAwesomeIcon icon={faRightFromBracket} />
+          로그아웃
+        </Button>
+      )}
     </Flex>
   );
 }
