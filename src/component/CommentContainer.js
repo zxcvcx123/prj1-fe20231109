@@ -96,7 +96,7 @@ function CommentItem({
   return (
     <Box>
       <Flex justifyContent={"space-between"}>
-        <Heading size={"xs"}>{comment.memberId}</Heading>
+        <Heading size={"xs"}>{comment.nickname}</Heading>
         <Text fontSize={"xs"}>{comment.inserted}</Text>
       </Flex>
       <Flex justifyContent={"space-between"} alignItems={"center"}>
@@ -181,6 +181,7 @@ function CommentList({
                 comment={comment}
                 onDeleteModalOpen={onDeleteModalOpen}
                 setIsSubmitting={setIsSubmitting}
+                isSubmitting={isSubmitting}
               />
             ))}
         </Stack>
@@ -231,7 +232,6 @@ export function CommentContainer({ boardId }) {
 
   // 댓글 삭제
   function handleDelete() {
-    // TODO: then, catch
     setIsSubmitting(true);
     axios
       .delete("/api/comment/" + commentIdRef.current)
