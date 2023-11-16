@@ -44,10 +44,35 @@ function CommentForm({ boardId, isSubmitting, onSubmit }) {
   );
 }
 
-// 댓글 목록
-function CommentList({ commentList, onDeleteModalOpen, isSubmitting }) {
+function CommentItem({ comment, onDeleteModalOpen }) {
   const { hasAccess } = useContext(LoginContext);
 
+  return (
+    <Box>
+      <Flex justifyContent={"space-between"}>
+        <Heading size={"xs"}>{comment.memberId}</Heading>
+        <Text fontSize={"xs"}>{comment.inserted}</Text>
+      </Flex>
+      <Flex justifyContent={"space-between"} alignItems={"center"}>
+        <Text pt={"2"} fontSize={"sm"} sx={{ whiteSpace: "pre-wrap" }}>
+          {comment.comment}
+        </Text>
+        {hasAccess(comment.memberId) && (
+          <Button
+            colorScheme="red"
+            size={"xs"}
+            onClick={() => onDeleteModalOpen(comment.id)}
+          >
+            <DeleteIcon />
+          </Button>
+        )}
+      </Flex>
+    </Box>
+  );
+}
+
+// 댓글 목록
+function CommentList({ commentList, onDeleteModalOpen }) {
   if (commentList == null) {
     return <Spinner />;
   }
@@ -61,31 +86,11 @@ function CommentList({ commentList, onDeleteModalOpen, isSubmitting }) {
         <Stack divider={<StackDivider />} spacing={"4"}>
           {commentList &&
             commentList.map((comment) => (
-              <Box key={comment.id}>
-                <Flex justifyContent={"space-between"}>
-                  <Heading size={"xs"}>{comment.memberId}</Heading>
-                  <Text fontSize={"xs"}>{comment.inserted}</Text>
-                </Flex>
-                <Flex justifyContent={"space-between"} alignItems={"center"}>
-                  <Text
-                    pt={"2"}
-                    fontSize={"sm"}
-                    sx={{ whiteSpace: "pre-wrap" }}
-                  >
-                    {comment.comment}
-                  </Text>
-                  {hasAccess(comment.memberId) && (
-                    <Button
-                      isDisabled={isSubmitting}
-                      colorScheme="red"
-                      size={"xs"}
-                      onClick={() => onDeleteModalOpen(comment.id)}
-                    >
-                      <DeleteIcon />
-                    </Button>
-                  )}
-                </Flex>
-              </Box>
+              <CommentItem
+                key={comment.id}
+                comment={comment}
+                onDeleteModalOpen={onDeleteModalOpen}
+              />
             ))}
         </Stack>
       </CardBody>
