@@ -17,6 +17,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Spinner,
+  Text,
   Textarea,
   useDisclosure,
   useToast,
@@ -24,10 +25,28 @@ import {
 import { LoginContext } from "../../component/LoginProvider";
 import { CommentContainer } from "../../component/CommentContainer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart } from "@fortawesome/free-regular-svg-icons";
+import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
+import { faHeart as faHeartFull } from "@fortawesome/free-solid-svg-icons";
+
+function LikeContainer({ like, onClick }) {
+  if (like == null) {
+    return <Spinner />;
+  }
+
+  return (
+    <Flex gap={"2"}>
+      <Button variant={"ghost"} size={"xl"} onClick={onClick}>
+        {like.like && <FontAwesomeIcon icon={faHeartFull} size={"xl"} />}
+        {like.like || <FontAwesomeIcon icon={emptyHeart} size={"xl"} />}
+      </Button>
+      <Heading size={"lg"}>{like.countLike}</Heading>
+    </Flex>
+  );
+}
 
 export function BoardView() {
   const [board, setBoard] = useState(null);
+  const [like, setLike] = useState(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { id } = useParams();
 
@@ -40,6 +59,10 @@ export function BoardView() {
     axios
       .get("/api/board/id/" + id)
       .then((response) => setBoard(response.data));
+  }, []);
+
+  useEffect(() => {
+    axios.get("/api/like/board/" + id).then((res) => setLike(res.data));
   }, []);
 
   if (board === null) {
@@ -67,16 +90,18 @@ export function BoardView() {
   }
 
   function handleLike() {
-    axios.post("/api/like", { boardId: board.id }).then().catch().finally();
+    axios
+      .post("/api/like", { boardId: board.id })
+      .then((res) => setLike(res.data))
+      .catch()
+      .finally();
   }
 
   return (
     <Box>
       <Flex justifyContent={"space-between"}>
         <Heading size={"xl"}>{board.id}번글 보기</Heading>
-        <Button variant={"ghost"} size={"xl"} onClick={handleLike}>
-          <FontAwesomeIcon icon={faHeart} size={"xl"} />
-        </Button>
+        <LikeContainer like={like} onClick={handleLike} />
       </Flex>
       <FormControl>
         <FormLabel> 제목</FormLabel>
