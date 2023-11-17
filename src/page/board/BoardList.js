@@ -26,6 +26,8 @@ function Pagination({ pageInfo }) {
   const pageNumbers = [];
   const navigate = useNavigate();
 
+  const [params] = useSearchParams();
+
   for (let i = pageInfo.startPageNumber; i <= pageInfo.endPageNumber; i++) {
     pageNumbers.push(i);
   }
@@ -44,10 +46,10 @@ function Pagination({ pageInfo }) {
       {pageNumbers.map((pageNumber) => (
         <Button
           key={pageNumber}
-          variant={
-            pageNumber === pageInfo.currentPageNumber ? "solid" : "ghost"
-          }
-          onClick={(e) => navigate("/?p=" + pageNumber)}
+          variant={parseInt(params.get("p")) === pageNumber ? "solid" : "ghost"}
+          onClick={(e) => {
+            navigate("/?p=" + pageNumber);
+          }}
         >
           {pageNumber}
         </Button>
