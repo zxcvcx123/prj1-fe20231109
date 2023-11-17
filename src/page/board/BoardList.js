@@ -6,6 +6,7 @@ import {
   Table,
   Tbody,
   Td,
+  Text,
   Th,
   Thead,
   Tr,
@@ -54,9 +55,17 @@ export function BoardList() {
                   <Td>
                     {board.title}
                     {board.countComment > 0 && (
-                      <Badge>
+                      <Badge mr={"5px"}>
                         <ChatIcon />
                         {board.countComment}
+                      </Badge>
+                    )}
+                    {board.countLike > 0 && (
+                      <Badge>
+                        <Text>
+                          좋아요
+                          {board.countLike}
+                        </Text>
                       </Badge>
                     )}
                   </Td>
