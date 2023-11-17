@@ -24,7 +24,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function Pagination({ pageInfo }) {
   const pageNumbers = [];
-
   const navigate = useNavigate();
 
   for (let i = pageInfo.startPageNumber; i <= pageInfo.endPageNumber; i++) {
@@ -34,19 +33,31 @@ function Pagination({ pageInfo }) {
   return (
     <Box>
       {pageInfo.prevPageNumber && (
-        <Button onClick={() => navigate("/?p=" + pageInfo.prevPageNumber)}>
+        <Button
+          variant={"ghost"}
+          onClick={() => navigate("/?p=" + pageInfo.prevPageNumber)}
+        >
           <FontAwesomeIcon icon={faChevronLeft} />
         </Button>
       )}
 
       {pageNumbers.map((pageNumber) => (
-        <Button key={pageNumber} onClick={() => navigate("/?p=" + pageNumber)}>
+        <Button
+          key={pageNumber}
+          variant={
+            pageNumber === pageInfo.currentPageNumber ? "solid" : "ghost"
+          }
+          onClick={(e) => navigate("/?p=" + pageNumber)}
+        >
           {pageNumber}
         </Button>
       ))}
 
       {pageInfo.nextPageNumber && (
-        <Button onClick={() => navigate("/?p=" + pageInfo.nextPageNumber)}>
+        <Button
+          variant={"ghost"}
+          onClick={() => navigate("/?p=" + pageInfo.nextPageNumber)}
+        >
           <FontAwesomeIcon icon={faChevronRight} />
         </Button>
       )}
