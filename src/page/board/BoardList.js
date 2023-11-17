@@ -18,6 +18,7 @@ import { ChatIcon } from "@chakra-ui/icons";
 export function BoardList() {
   const [boardList, setBoardList] = useState([]);
   const navigate = useNavigate();
+
   // 통신
   useEffect(() => {
     axios
@@ -70,7 +71,7 @@ export function BoardList() {
                     )}
                   </Td>
                   <Td>{board.nickname}</Td>
-                  <Td>{board.inserted}</Td>
+                  <Td>{board.ago}</Td>
                 </Tr>
               ))}
           </Tbody>
