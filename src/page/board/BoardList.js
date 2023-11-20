@@ -4,6 +4,8 @@ import {
   Box,
   Button,
   Center,
+  Flex,
+  Input,
   Spinner,
   Table,
   Tbody,
@@ -64,6 +66,26 @@ function Pagination({ pageInfo }) {
         </Button>
       )}
     </Box>
+  );
+}
+
+function SearchComponet() {
+  const [keyword, setKeyword] = useState("");
+  const navigate = useNavigate();
+  function handleSearch() {
+    // /?k=keyword
+    const params = new URLSearchParams();
+    params.set("k", keyword);
+    navigate("/?" + params);
+  }
+
+  return (
+    <Center>
+      <Flex width={"50%"} mt={"15px"}>
+        <Input value={keyword} onChange={(e) => setKeyword(e.target.value)} />
+        <Button onClick={handleSearch}>검색</Button>
+      </Flex>
+    </Center>
   );
 }
 
@@ -133,6 +155,7 @@ export function BoardList() {
           </Tbody>
         </Table>
       </Box>
+      <SearchComponet />
       <Center mt={"15px"}>
         <Pagination pageInfo={pageInfo} />
       </Center>
