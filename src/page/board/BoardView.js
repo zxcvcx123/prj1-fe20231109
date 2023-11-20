@@ -8,6 +8,7 @@ import {
   FormControl,
   FormLabel,
   Heading,
+  Image,
   Input,
   Modal,
   ModalBody,
@@ -116,6 +117,14 @@ export function BoardView() {
         <FormLabel>본문</FormLabel>
         <Textarea value={board.content} readOnly />
       </FormControl>
+
+      {/* 이미지 출력 */}
+      {board.files.map((file) => (
+        <Box key={file.id} my={"5px"} boader={"3px solid black"}>
+          <Image width={"100%"} src={file.url} alt={file.fileName} />
+        </Box>
+      ))}
+
       <FormControl>
         <FormLabel>별명</FormLabel>
         <Input value={board.nickname} readOnly />
