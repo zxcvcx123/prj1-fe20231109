@@ -23,6 +23,23 @@ import {
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import * as PropTypes from "prop-types";
+
+function PageButton({ variant, pageNumber, children }) {
+  const [params] = useSearchParams();
+
+  const navigate = useNavigate();
+  function handleClick() {
+    params.set("p", pageNumber);
+    navigate("/?" + params);
+  }
+
+  return (
+    <Button variant={variant} onClick={handleClick}>
+      {children}
+    </Button>
+  );
+}
 
 function Pagination({ pageInfo }) {
   const pageNumbers = [];
@@ -46,15 +63,13 @@ function Pagination({ pageInfo }) {
       )}
 
       {pageNumbers.map((pageNumber) => (
-        <Button
+        <PageButton
           key={pageNumber}
           variant={parseInt(params.get("p")) === pageNumber ? "solid" : "ghost"}
-          onClick={(e) => {
-            navigate("/?p=" + pageNumber);
-          }}
+          pageNumber={pageNumber}
         >
           {pageNumber}
-        </Button>
+        </PageButton>
       ))}
 
       {pageInfo.nextPageNumber && (
