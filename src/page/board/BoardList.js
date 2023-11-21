@@ -26,6 +26,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as PropTypes from "prop-types";
+import { faImage } from "@fortawesome/free-regular-svg-icons";
 
 function PageButton({ variant, pageNumber, children }) {
   const params = useSearchParams();
@@ -144,17 +145,25 @@ export function BoardList() {
                   <Td>
                     {board.title}
                     {board.countComment > 0 && (
-                      <Badge mr={"5px"}>
+                      <Badge ml={"5px"} mr={"5px"}>
                         <ChatIcon />
                         {board.countComment}
                       </Badge>
                     )}
                     {board.countLike > 0 && (
-                      <Badge>
+                      <Badge ml={"5px"} mr={"5px"}>
                         <Text>
                           좋아요
                           {board.countLike}
                         </Text>
+                      </Badge>
+                    )}
+                    {board.countFile > 0 && (
+                      <Badge ml={"5px"} mr={"5px"}>
+                        <Flex alignItems={"center"}>
+                          <FontAwesomeIcon icon={faImage} />
+                          <Text>{board.countFile}</Text>
+                        </Flex>
                       </Badge>
                     )}
                   </Td>
