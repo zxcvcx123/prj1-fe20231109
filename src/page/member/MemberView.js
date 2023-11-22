@@ -3,8 +3,13 @@ import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
   FormControl,
   FormLabel,
+  Heading,
   Input,
   Modal,
   ModalBody,
@@ -77,29 +82,44 @@ export function MemberView() {
   }
 
   return (
-    <Box>
-      <h1>{member.id}님 정보</h1>
-      <FormControl>
-        <FormLabel>password</FormLabel>
-        <Input type="text" value={member.password} readOnly />
-      </FormControl>
-      <FormControl>
-        <FormLabel>email</FormLabel>
-        <Input value={member.email} readOnly />
-      </FormControl>
-      <FormControl>
-        <FormLabel>nickname</FormLabel>
-        <Input value={member.nickname} readOnly />
-      </FormControl>
-      <Button
-        colorScheme="purple"
-        onClick={() => navigate("/member/edit?" + params.toString())}
-      >
-        수정
-      </Button>
-      <Button colorScheme="red" onClick={onOpen}>
-        탈퇴
-      </Button>
+    <Box width={"50%"} m={"auto"}>
+      <Card>
+        <CardHeader>
+          <Heading>{member.id}님 정보</Heading>
+        </CardHeader>
+        <CardBody>
+          <FormControl mb={4}>
+            <FormLabel fontSize={"xl"} fontWeight={"bold"}>
+              비밀번호
+            </FormLabel>
+            <Input type="text" value={member.password} readOnly />
+          </FormControl>
+          <FormControl mb={4}>
+            <FormLabel fontSize={"xl"} fontWeight={"bold"}>
+              이메일
+            </FormLabel>
+            <Input value={member.email} readOnly />
+          </FormControl>
+          <FormControl mb={4}>
+            <FormLabel fontSize={"xl"} fontWeight={"bold"}>
+              닉네임
+            </FormLabel>
+            <Input value={member.nickname} readOnly />
+          </FormControl>
+        </CardBody>
+        <CardFooter>
+          <Button
+            mr={4}
+            colorScheme="purple"
+            onClick={() => navigate("/member/edit?" + params.toString())}
+          >
+            수정
+          </Button>
+          <Button colorScheme="red" onClick={onOpen}>
+            탈퇴
+          </Button>
+        </CardFooter>
+      </Card>
       {/*  삭제 모달 */}
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

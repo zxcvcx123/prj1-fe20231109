@@ -4,6 +4,7 @@ import {
   Card,
   CardBody,
   CardHeader,
+  Center,
   Flex,
   Heading,
   Modal,
@@ -30,6 +31,8 @@ import {
   NotAllowedIcon,
 } from "@chakra-ui/icons";
 import { LoginContext } from "./LoginProvider";
+import { faComments, faPaperPlane } from "@fortawesome/free-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 // 댓글 작성
 function CommentForm({ boardId, isSubmitting, onSubmit }) {
@@ -40,11 +43,25 @@ function CommentForm({ boardId, isSubmitting, onSubmit }) {
   }
 
   return (
-    <Box>
-      <Textarea value={comment} onChange={(e) => setComment(e.target.value)} />
-      <Button isDisable={isSubmitting} onClick={handleSubmit}>
-        쓰기
-      </Button>
+    <Box mt={2} w={"100%"}>
+      <Flex>
+        <Textarea
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+        />
+
+        <Center ml={2} isDisable={isSubmitting} onClick={handleSubmit}>
+          <Button
+            variant={"ghost"}
+            h={"100%"}
+            paddingLeft={"30px"}
+            paddingRight={"30px"}
+            border={"1px solid #dae1eb"}
+          >
+            <FontAwesomeIcon icon={faPaperPlane} />
+          </Button>
+        </Center>
+      </Flex>
     </Box>
   );
 }
@@ -96,12 +113,12 @@ function CommentItem({
   return (
     <Box>
       <Flex justifyContent={"space-between"}>
-        <Heading size={"xs"}>{comment.nickname}</Heading>
-        <Text fontSize={"xs"}>{comment.ago}</Text>
+        <Heading size={"md"}>{comment.nickname}</Heading>
+        <Text fontSize={"m"}>{comment.ago}</Text>
       </Flex>
       <Flex justifyContent={"space-between"} alignItems={"center"}>
         <Box flex={"1"}>
-          <Text pt={"2"} fontSize={"sm"} sx={{ whiteSpace: "pre-wrap" }}>
+          <Text pt={"2"} fontSize={"lg"} sx={{ whiteSpace: "pre-wrap" }}>
             {comment.comment}
           </Text>
           {isEditing && (
@@ -125,6 +142,8 @@ function CommentItem({
           <Box>
             {isEditing || (
               <Button
+                variant={"ghost"}
+                mr={1}
                 size={"xs"}
                 colorScheme="purple"
                 onClick={() => setIsEditing(true)}
@@ -134,6 +153,7 @@ function CommentItem({
             )}
             {isEditing && (
               <Button
+                variant={"ghost"}
                 size={"xs"}
                 colorScheme="gray"
                 onClick={() => setIsEditing(false)}
@@ -143,6 +163,7 @@ function CommentItem({
             )}
 
             <Button
+              variant={"ghost"}
               colorScheme="red"
               size={"xs"}
               onClick={() => onDeleteModalOpen(comment.id)}
@@ -168,10 +189,7 @@ function CommentList({
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <Heading size={"md"}>댓글 리스트</Heading>
-      </CardHeader>
+    <Card mt={4}>
       <CardBody>
         <Stack divider={<StackDivider />} spacing={"4"}>
           {commentList &&
@@ -272,7 +290,9 @@ export function CommentContainer({ boardId }) {
       {isAuthenticated() && (
         <>
           <Box mt={"3%"}>
-            <p>댓글 작성</p>
+            <Heading>
+              댓글 <FontAwesomeIcon icon={faComments} />
+            </Heading>
           </Box>
           <CommentForm
             boardId={boardId}

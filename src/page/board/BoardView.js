@@ -4,6 +4,10 @@ import axios from "axios";
 import {
   Box,
   Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
   Flex,
   FormControl,
   FormLabel,
@@ -105,45 +109,57 @@ export function BoardView() {
 
   return (
     <Box>
-      <Flex justifyContent={"space-between"}>
-        <Heading size={"xl"}>{board.id}번글 보기</Heading>
-        <LikeContainer like={like} onClick={handleLike} />
-      </Flex>
-      <FormControl>
-        <FormLabel> 제목</FormLabel>
-        <Input value={board.title} readOnly />
-      </FormControl>
-      <FormControl>
-        <FormLabel>본문</FormLabel>
-        <Textarea value={board.content} readOnly />
-      </FormControl>
+      <Card>
+        <CardHeader>
+          <Flex justifyContent={"space-between"}>
+            <Heading size={"xl"}>{board.id}번글 보기</Heading>
 
-      {/* 이미지 출력 */}
-      {board.files.map((file) => (
-        <Box key={file.id} my={"5px"} boader={"3px solid black"}>
-          <Image width={"100%"} src={file.url} alt={file.fileName} />
-        </Box>
-      ))}
+            <LikeContainer like={like} onClick={handleLike} />
+          </Flex>
+        </CardHeader>
+        <CardBody>
+          <FormControl mb={4}>
+            <FormLabel fontSize={"xl"} fontWeight={"bold"}>
+              닉네임
+            </FormLabel>
+            <Input value={board.nickname} readOnly />
+          </FormControl>
+          <FormControl mb={4}>
+            <FormLabel fontSize={"xl"} fontWeight={"bold"}>
+              {" "}
+              제목
+            </FormLabel>
+            <Input value={board.title} readOnly />
+          </FormControl>
+          <FormControl mb={4}>
+            <FormLabel fontSize={"xl"} fontWeight={"bold"}>
+              본문
+            </FormLabel>
+            <Textarea value={board.content} readOnly />
+          </FormControl>
 
-      <FormControl>
-        <FormLabel>별명</FormLabel>
-        <Input value={board.nickname} readOnly />
-      </FormControl>
-      <FormControl>
-        <FormLabel>작성일시</FormLabel>
-        <Input value={board.inserted} readOnly />
-      </FormControl>
-
-      {(hasAccess(board.writer) || isAdmin()) && (
-        <>
-          <Button colorScheme="purple" onClick={() => navigate("/edit/" + id)}>
-            수정
-          </Button>
-          <Button colorScheme="red" onClick={onOpen}>
-            삭제
-          </Button>
-        </>
-      )}
+          {/* 이미지 출력 */}
+          {board.files.map((file) => (
+            <Box key={file.id} my={"5px"} boader={"3px solid black"}>
+              <Image width={"60%"} src={file.url} alt={file.fileName} />
+            </Box>
+          ))}
+        </CardBody>
+        {(hasAccess(board.writer) || isAdmin()) && (
+          <CardFooter>
+            <Button
+              mr={3}
+              colorScheme="purple"
+              onClick={() => navigate("/edit/" + id)}
+            >
+              수정
+            </Button>
+            <Button colorScheme="red" onClick={onOpen}>
+              삭제
+            </Button>
+          </CardFooter>
+        )}
+      </Card>
       {/*  삭제 모달 */}
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

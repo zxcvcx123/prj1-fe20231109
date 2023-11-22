@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   Box,
+  Heading,
   Spinner,
   Table,
   Tbody,
@@ -37,7 +38,8 @@ export function MemberList() {
 
   return (
     <Box>
-      <Table>
+      <Heading textIndent={"20px"}>회원목록</Heading>
+      <Table mt={5}>
         <Thead>
           <Tr>
             <Th>아이디</Th>

@@ -5,6 +5,7 @@ import {
   Button,
   Center,
   Flex,
+  Heading,
   Input,
   Select,
   Spinner,
@@ -19,19 +20,14 @@ import {
 import axios from "axios";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { ChatIcon } from "@chakra-ui/icons";
-import {
-  faAngleLeft,
-  faAngleRight,
-  faChevronLeft,
-  faChevronRight,
-} from "@fortawesome/free-solid-svg-icons";
+import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import * as PropTypes from "prop-types";
 import { faImage } from "@fortawesome/free-regular-svg-icons";
 
 function PageButton({ variant, pageNumber, children }) {
-  const params = useSearchParams();
+  const [params] = useSearchParams();
   const navigate = useNavigate();
+
   function handleClick() {
     params.set("p", pageNumber);
     navigate("/?" + params);
@@ -46,16 +42,15 @@ function PageButton({ variant, pageNumber, children }) {
 
 function Pagination({ pageInfo }) {
   const pageNumbers = [];
-  const navigate = useNavigate();
 
-  const [params] = useSearchParams();
+  const navigate = useNavigate();
 
   for (let i = pageInfo.startPageNumber; i <= pageInfo.endPageNumber; i++) {
     pageNumbers.push(i);
   }
 
   return (
-    <Box>
+    <Flex gap={6}>
       {pageInfo.prevPageNumber && (
         <PageButton variant="ghost" pageNumber={pageInfo.prevPageNumber}>
           <FontAwesomeIcon icon={faAngleLeft} />
@@ -65,7 +60,9 @@ function Pagination({ pageInfo }) {
       {pageNumbers.map((pageNumber) => (
         <PageButton
           key={pageNumber}
-          variant={parseInt(params.get("p")) === pageNumber ? "solid" : "ghost"}
+          variant={
+            pageNumber === pageInfo.currentPageNumber ? "solid" : "ghost"
+          }
           pageNumber={pageNumber}
         >
           {pageNumber}
@@ -77,7 +74,7 @@ function Pagination({ pageInfo }) {
           <FontAwesomeIcon icon={faAngleRight} />
         </PageButton>
       )}
-    </Box>
+    </Flex>
   );
 }
 
@@ -95,8 +92,8 @@ function SearchComponet() {
 
   return (
     <Center>
-      <Flex width={"50%"} mt={"15px"}>
-        <Select width={"25%"} onChange={(e) => setCategory(e.target.value)}>
+      <Flex width={"55%"} mt={"15px"} mb={"15px"}>
+        <Select width={"20%"} onChange={(e) => setCategory(e.target.value)}>
           <option selected value="all">
             전체
           </option>
@@ -104,7 +101,9 @@ function SearchComponet() {
           <option value="content">본문</option>
         </Select>
         <Input value={keyword} onChange={(e) => setKeyword(e.target.value)} />
-        <Button onClick={handleSearch}>검색</Button>
+        <Button borderRadius={"0"} onClick={handleSearch}>
+          검색
+        </Button>
       </Flex>
     </Center>
   );
@@ -130,12 +129,12 @@ export function BoardList() {
   }
   return (
     <Box>
-      <h1>게시물 목록</h1>
-      <Box>
+      <Heading textIndent={"20px"}>게시판</Heading>
+      <Box mt={5}>
         <Table>
           <Thead>
             <Tr>
-              <Th>id</Th>
+              <Th w={"150px"}>id</Th>
               <Th>title</Th>
               <Th>by</Th>
               <Th>at</Th>

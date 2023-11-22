@@ -6,8 +6,12 @@ import { NavBar } from "../component/NavBar";
 export function HomeLayout() {
   return (
     <Box>
-      <NavBar />
-      <Outlet />
+      <Box width={"80%"} m={"auto"} mb={10} mt={2}>
+        <NavBar />
+      </Box>
+      <Box width={"80%"} m={"auto"}>
+        <Outlet />
+      </Box>
     </Box>
   );
 }
